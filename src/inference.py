@@ -73,8 +73,7 @@ def load_model_from_registry(version=None):
     project = get_hopsworks_project()
     model_registry = project.get_model_registry()
 
-    models = model_registry.get_models(name=config.MODEL_NAME)
-    model = max(models, key=lambda model: model.version)
+    model = model_registry.get_model(name="taxi_demand_predictor_next_hour_bike", version=2)
     model_dir = model.download()
     model = joblib.load(Path(model_dir) / "lgb_model.pkl")
 
