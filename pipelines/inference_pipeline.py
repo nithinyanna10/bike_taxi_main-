@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 
 import pandas as pd
-
+import pytz
 import src.config as config
+from src.data_utils import transform_ts_data_info_features_and_target
 from src.inference import (
     get_feature_store,
     get_model_predictions,
@@ -12,7 +13,10 @@ from src.inference import (
 # Get the current datetime64[us, Etc/UTC]
 # for number in range(22, 24 * 29):
 # current_date = pd.Timestamp.now(tz="Etc/UTC") - timedelta(hours=number)
-current_date = pd.Timestamp.now(tz="Etc/UTC")
+est = pytz.timezone("America/New_York")
+
+# Get current timestamp in EST
+current_date = pd.Timestamp.now(tz=est)
 feature_store = get_feature_store()
 
 # read time-series data from the feature store
@@ -33,7 +37,7 @@ ts_data["pickup_hour"] = ts_data["pickup_hour"].dt.tz_localize(None)
 
 from src.data_utils import transform_ts_data_info_features
 
-features = transform_ts_data_info_features(ts_data, window_size=24 * 28, step_size=23)
+features,targets = transform_ts_data_info_features_and_target(ts_data, window_size=24*28, step_size=12)
 
 model = load_model_from_registry()
 
