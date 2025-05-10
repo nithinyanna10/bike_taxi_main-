@@ -11,7 +11,8 @@ from src.data_utils import transform_ts_data_info_features
 
 def get_hopsworks_project() -> hopsworks.project.Project:
     return hopsworks.login(
-        project=config.HOPSWORKS_PROJECT_NAME, api_key_value=config.HOPSWORKS_API_KEY
+        project=config.HOPSWORKS_PROJECT_NAME,
+        api_key_value=config.HOPSWORKS_API_KEY
     )
 
 
