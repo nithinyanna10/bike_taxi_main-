@@ -23,19 +23,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements_feature_pipeline.txt
 
-      - name: Debug working directory and verify file structure
+      - name: Debug environment
         run: |
-          echo "== Working Directory =="
+          echo "== PWD =="
           pwd
           echo "== Directory Tree =="
           find . -name "*.py"
 
-      - name: Run feature pipeline and load to Hopsworks
-        run: |
-          echo "== Setting PYTHONPATH to project root =="
-          export PYTHONPATH=$(pwd)
-          echo "PYTHONPATH=$PYTHONPATH"
-          echo "== Running pipeline =="
-          python -m pipelines.feature_pipeline
+      - name: Run feature pipeline directly (script mode)
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+        run: |
+          echo "== Running pipelines/feature_pipeline.py directly =="
+          python pipelines/feature_pipeline.py
