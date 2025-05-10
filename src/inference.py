@@ -60,7 +60,7 @@ def load_batch_of_features_from_store(
     return features
 
 
-def load_model_from_registry(version=None):
+def load_model_from_registry(version=2):
     from pathlib import Path
 
     import joblib
@@ -70,12 +70,18 @@ def load_model_from_registry(version=None):
         average_rides_last_4_weeks,
     )
 
-    project = get_hopsworks_project()
+     project = get_hopsworks_project()
     model_registry = project.get_model_registry()
 
-    model = model_registry.get_model(name="taxi_demand_predictor_next_hour_bike", version=2)
+    # Load model explicitly by name and version
+    model = model_registry.get_model(
+        name="taxi_demand_predictor_next_hour_bike",
+        version=version
+    )
+
     model_dir = model.download()
-    model = joblib.load(Path(model_dir) / "lgb_model.pkl")
+    model_path = Path(model_dir) / "lgb_model.pkl"
+    model = joblib.load(model_path)
 
     return model
 
