@@ -2,8 +2,8 @@ name: citibike_rides_hourly_features_pipeline
 
 on:
   schedule:
-    - cron: "0 * * * *"  # Every hour
-  workflow_dispatch: {}  # Manual trigger
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
 
 jobs:
   run-feature-pipeline:
@@ -23,23 +23,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements_feature_pipeline.txt
 
-      - name: Debug current environment and project structure
+      - name: Debug working directory and verify file structure
         run: |
           echo "== Working Directory =="
           pwd
-          echo "== Environment Variables =="
-          env
-          echo "== Project File Tree =="
-          ls -R
+          echo "== Directory Tree =="
+          find . -name "*.py"
 
       - name: Run feature pipeline and load to Hopsworks
         run: |
-          echo "== Changing PYTHONPATH =="
+          echo "== Setting PYTHONPATH to project root =="
           export PYTHONPATH=$(pwd)
           echo "PYTHONPATH=$PYTHONPATH"
-          echo "== Verifying module path =="
-          find . -name "feature_pipeline.py"
           echo "== Running pipeline =="
-          python $(pwd)/pipelines/feature_pipeline.py
+          python -m pipelines.feature_pipeline
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
