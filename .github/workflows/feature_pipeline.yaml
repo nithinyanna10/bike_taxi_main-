@@ -2,8 +2,8 @@ name: citibike_rides_hourly_features_pipeline
 
 on:
   schedule:
-    - cron: "0 * * * *"  # Runs every hour
-  workflow_dispatch: {}  # Allows manual triggering of the workflow
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
 
 jobs:
   run-feature-pipeline:
@@ -29,7 +29,7 @@ jobs:
           ls -R
 
       - name: Run feature pipeline and load to Hopsworks
-        working-directory: ${{ github.workspace }}
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+          PYTHONPATH: ${{ github.workspace }}  # 👈 THIS is critical
         run: python -m pipelines.feature_pipeline
