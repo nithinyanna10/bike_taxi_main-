@@ -27,9 +27,15 @@ past_hours = st.sidebar.slider(
 st.write("Fetching data for the past", past_hours, "hours...")
 df1 = fetch_hourly_rides(past_hours)
 df2 = fetch_predictions(past_hours)
+print("mnbdsjhv")
+print(df1)
+print("sdwdsd")
+print(df2)
 
 # Merge the DataFrames on 'pickup_location_id' and 'pickup_hour'
 merged_df = pd.merge(df1, df2, on=["pickup_location_id", "pickup_hour"])
+
+print(merged_df)
 
 # Calculate the absolute error
 merged_df["absolute_error"] = abs(merged_df["predicted_demand"] - merged_df["rides"])
