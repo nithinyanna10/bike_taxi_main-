@@ -32,4 +32,6 @@ jobs:
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
           PYTHONPATH: ${{ github.workspace }}  # 👈 THIS is critical
-        run: python -m pipelines.feature_pipeline
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)/pipelines
+          python -m src.feature_pipeline
