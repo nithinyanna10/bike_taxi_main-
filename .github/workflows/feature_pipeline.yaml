@@ -40,6 +40,6 @@ jobs:
           echo "== Verifying module path =="
           find . -name "feature_pipeline.py"
           echo "== Running pipeline =="
-          python -m pipelines.feature_pipeline
+          python $(pwd)/pipelines/feature_pipeline.py
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
