@@ -1,12 +1,11 @@
 name: citibike_rides_hourly_features_pipeline
-
 on:
   schedule:
-    - cron: "0 * * * *"
-  workflow_dispatch: {}
+    - cron: "0 * * * *"  # Runs every hour
+  workflow_dispatch: {}  # Allows manual triggering of the workflow
 
 jobs:
-  run-feature-pipeline:
+  run-python-script:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,23 +15,17 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.11"  # Specify the Python version
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements_feature_pipeline.txt
 
-      - name: Debug environment
-        run: |
-          echo "== PWD =="
-          pwd
-          echo "== Directory Tree =="
-          find . -name "*.py"
+      - name: Debug Secrets
+        run: echo "HOPSWORKS_API_KEY=${{ secrets.HOPSWORKS_API_KEY }}"
 
-      - name: Run feature pipeline directly (script mode)
+      - name: Run new data fetch pipeline and load to hopsworks
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
-        run: |
-          echo "== Running pipelines/feature_pipeline.py directly =="
-          python pipelines/feature_pipeline.py
+        run: python -m pipelines.feature_pipeline
